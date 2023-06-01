@@ -5,10 +5,14 @@ exports.test = (req, res, next) => {
     var idx = req.params.idx
     if(idx < 10) {
         req.idx = `${idx}는 10보다 작은 수 입니다.`;
+        text = `ㅇㅅㅇ`
     } else if(idx == 10) {
         req.idx = `${idx}는 10 입니다.`;
+        text = `ㅠㅅㅠ`
+
     } else {
         req.idx = `${idx}는 10보다 큰 수 입니다.`;
+        text = `ㅋㅋㅋ`
     }
     return next();
 } 

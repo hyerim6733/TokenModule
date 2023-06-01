@@ -8,8 +8,9 @@ const router = express.Router();
 
 router.post('/', tokenLimiter, async (req, res) => {
     try {
-        const id = 'vappet'
-        const nick = 'hodoopapa'
+        const id = req.query.id
+        const nick = req.query.nick
+        console.log(`${id} and ${nick}`)
 
         // jwt:sign() 메소드 : 토큰 발급
         const token = jwt.sign({
@@ -41,6 +42,7 @@ router.get('/test', verifyToken, (req, res) => {
 })
 
 router.get('/test/:idx', test, (req, res) => {
+    console.log(`text : `,text);
     res.json(req.idx);
 })
 
