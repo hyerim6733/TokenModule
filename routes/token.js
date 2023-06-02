@@ -7,6 +7,9 @@ const { verifyToken, tokenLimiter, test } = require('./middlewares')
 const router = express.Router();
 
 router.post('/', tokenLimiter, async (req, res) => {
+
+    var body_param = req.body;
+
     try {
         const id = req.query.id
         const nick = req.query.nick
@@ -14,7 +17,7 @@ router.post('/', tokenLimiter, async (req, res) => {
 
         // jwt:sign() 메소드 : 토큰 발급
         const token = jwt.sign({
-            id, 
+            id,
             nick,
         }, process.env.JWT_SECRET, {
             expiresIn: '1m',
@@ -27,23 +30,26 @@ router.post('/', tokenLimiter, async (req, res) => {
             token,
         });
     }
-        catch(error) {
-            console.error(error);
-            return res.statuts(500).json({
-                code:500,
-                message: '서버에러',
-            });
-        }
-    
-}) 
+    catch (error) {
+        console.error(error);
+        return res.statuts(500).json({
+            code: 500,
+            message: '서버에러',
+        });
+    }
+})
 
 router.get('/test', verifyToken, (req, res) => {
     res.json(req.decoded);
-})
+})    
 
 router.get('/test/:idx', test, (req, res) => {
-    console.log(`text : `,text);
+    console.log(`text : `, text);
     res.json(req.idx);
 })
+
+router.get('/home', verifyToken, (req, res) => {
+    res.render('home', { token: req.decoded });
+});
 
 module.exports = router;
