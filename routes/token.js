@@ -2,17 +2,20 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
-const { verifyToken, tokenLimiter, test } = require('./middlewares')
+const { verifyToken, tokenLimiter, apiLimiter, test } = require('./middlewares')
+const { act } = require('./middletest')
 
 const router = express.Router();
 
-router.post('/', tokenLimiter, async (req, res) => {
+// middlewares.js
+router.post('/', apiLimiter, async (req, res) => {
 
     var body_param = req.body;
 
     try {
-        const id = req.query.id
-        const nick = req.query.nick
+        //console.log(req.body.id, req.body.nick)
+        const id = req.body.id
+        const nick = req.body.nick
         console.log(`${id} and ${nick}`)
 
         // jwt:sign() 메소드 : 토큰 발급
@@ -39,10 +42,12 @@ router.post('/', tokenLimiter, async (req, res) => {
     }
 })
 
+// middlewares.js
 router.get('/test', verifyToken, (req, res) => {
     res.json(req.decoded);
 })    
 
+// middlewares.js
 router.get('/test/:idx', test, (req, res) => {
     console.log(`text : `, text);
     res.json(req.idx);
@@ -51,5 +56,12 @@ router.get('/test/:idx', test, (req, res) => {
 router.get('/home', verifyToken, (req, res) => {
     res.render('home', { token: req.decoded });
 });
+
+router.get('/zzz', act, (req, res) => {
+    var a = req.query.a;
+    var b = req.query.b;
+    console.log(a, b);
+    res.json(req.calcul);
+})
 
 module.exports = router;
